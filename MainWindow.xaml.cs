@@ -1,13 +1,15 @@
-﻿using System.Windows;
+﻿using CmlLib.Core;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace Crafty;
 
 public partial class MainWindow : Window
 {
     public static MainWindow Current;
-
     public MainWindow()
     {
+        Topmost = true;
         Current = this;
         InitializeComponent();
         CraftyEssentials.GetVersions();

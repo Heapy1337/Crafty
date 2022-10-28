@@ -1,4 +1,6 @@
-﻿using Downloader;
+﻿using CmlLib.Core;
+using CmlLib.Core.Auth;
+using Downloader;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
@@ -13,6 +15,7 @@ namespace Crafty;
 
 public static class CraftyEssentials
 {
+    public static string CraftyPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/.crafty";
     public static string CraftyVersion = "0.1";
     public static string AllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_123456789";
     public static string VersionManifest = "https://piston-meta.mojang.com/mc/game/version_manifest.json";
@@ -80,7 +83,6 @@ public static class CraftyEssentials
 
     public static async Task DownloadVersion(string version)
     {
-        string CraftyPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/.crafty";
         Directory.CreateDirectory($"{CraftyPath}/versions/{version}");
         string Path = $"{CraftyPath}/versions/{version}/{version}.jar";
         if (File.Exists(Path)) { return; }
@@ -131,9 +133,27 @@ public static class CraftyEssentials
 
         var Downloader = new DownloadService(DownloadConfig);
         await Downloader.DownloadFileTaskAsync($"https://download.oracle.com/java/19/latest/jdk-19_windows-x64_bin.zip", TempPath);
+        if (File.Exists($"{CraftyPath}/java")) return;
 
         Directory.CreateDirectory($"{CraftyPath}/java");
         await Task.Run(() => ZipFile.ExtractToDirectory(TempPath, $"{CraftyPath}/java"));
         await Task.Run(() => File.Delete(TempPath));
+    }
+}
+
+public class CraftyMinecraftPath : MinecraftPath
+{
+    public CraftyMinecraftPath(string path)
+    {
+        BasePath = NormalizePath(path);
+
+        Library = NormalizePath(BasePath + "/libraries");
+        Versions = NormalizePath(BasePath + "/versions");
+        Resource = NormalizePath(BasePath + "/resources");
+
+        Runtime = NormalizePath(BasePath + "/java");
+        Assets = NormalizePath(BasePath + "/assets");
+
+        CreateDirs();
     }
 }
