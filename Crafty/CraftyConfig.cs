@@ -9,6 +9,8 @@ public static class CraftyConfig
 {
     public static void writeFile()
     {
+        data.username = MainWindow.Current.Username.Text;
+        data.ram = (int)MainWindow.Current.RamSlider.Value;
         var json = JsonConvert.SerializeObject(data);
         File.WriteAllTextAsync(CraftyLauncher.CraftyPath + "/config.json", json);
     }
