@@ -1,15 +1,14 @@
 using Newtonsoft.Json;
+using System.ComponentModel;
 using System.IO;
+using System.Windows;
 
 namespace Crafty;
 
 public static class CraftyConfig
 {
-    public static void writeFile(string username, double ram)
+    public static void writeFile()
     {
-        data.username = username;
-        data.ram = (int)ram;
-
         var json = JsonConvert.SerializeObject(data);
         File.WriteAllTextAsync(CraftyLauncher.CraftyPath + "/config.json", json);
     }
@@ -21,37 +20,23 @@ public static class CraftyConfig
             string jsonString = File.ReadAllText(CraftyLauncher.CraftyPath + "/config.json");
             JsonConvert.PopulateObject(jsonString, data);
 
-            isJsonExist = true;
-            return;
+            MainWindow.Current.Username.Text = data.username;
+            MainWindow.Current.RamSlider.Value = (double)data.ram;
+
+            if (data.getSnapshots) MainWindow.Current.ToggleButton_GetSnapshots.IsChecked = true; else MainWindow.Current.ToggleButton_GetSnapshots.IsChecked = false;
+            if (data.getBetas) MainWindow.Current.ToggleButton_GetBetas.IsChecked = true; else MainWindow.Current.ToggleButton_GetBetas.IsChecked = false;
+            if (data.getAlphas) MainWindow.Current.ToggleButton_GetAlphas.IsChecked = true; else MainWindow.Current.ToggleButton_GetAlphas.IsChecked = false;
         }
-        isJsonExist = false;
     }
 
-    public static string loadUsernameFromJson()
-    {
-        if (isJsonExist)
-        {
-            return data.username;
-        }
-        return "";
-    }
-
-    public static double loadRamFromJson()
-    {
-        if (isJsonExist)
-        {
-            return (double)data.ram;
-        }
-        return 2048;
-    }
-
-
-    private class Data_t
+    public class Data_t
     {
         public string? username { get; set; }
-        public int? ram { get; set; }
+        public int? ram = 2048;
+        public bool getSnapshots { get; set; }
+        public bool getAlphas { get; set; }
+        public bool getBetas { get; set; }
     }
 
-    private static Data_t data = new Data_t { };
-    private static bool isJsonExist;
+    public static Data_t data = new Data_t { };
 }

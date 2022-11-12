@@ -143,7 +143,7 @@
                                 Foreground="White"
                                 Text="MB" />
                             <TextBox
-                                Name="RamText"
+                                x:Name="RamText"
                                 Width="100"
                                 Margin="5"
                                 DockPanel.Dock="Right"
@@ -151,7 +151,7 @@
                                 IsEnabled="False"
                                 TextAlignment="Right" />
                             <Slider
-                                Name="RamSlider"
+                                x:Name="RamSlider"
                                 Margin="5"
                                 Focusable="False"
                                 IsSnapToTickEnabled="True"
@@ -169,6 +169,7 @@
                                 Text="Show Snapshot versions" />
 
                             <ToggleButton
+                                x:Name="ToggleButton_GetSnapshots"
                                 Margin="10"
                                 HorizontalAlignment="Right"
                                 Checked="SnapshotChecked"
@@ -186,6 +187,7 @@
                                 Text="Show Beta versions" />
 
                             <ToggleButton
+                                Name="ToggleButton_GetBetas"
                                 Margin="10"
                                 HorizontalAlignment="Right"
                                 Checked="BetaChecked"
@@ -203,6 +205,7 @@
                                 Text="Show Alpha versions" />
 
                             <ToggleButton
+                                Name="ToggleButton_GetAlphas"
                                 Margin="10"
                                 HorizontalAlignment="Right"
                                 Checked="AlphaChecked"

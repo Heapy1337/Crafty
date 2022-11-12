@@ -33,9 +33,6 @@ public class CraftyLauncher
     public static List<CraftyVersion> FabricVersionList = new();
     public static bool LoggedIn = false;
     public static MSession Session;
-    public static bool GetSnapshots = false;
-    public static bool GetBetas = false;
-    public static bool GetAlphas = false;
     public static LoginHandler CraftyLogin = new(x => x.CacheManager = new(new JsonFileCacheManager<SessionCache>($"{CraftyPath}/crafty_session.json")));
 
     public static void AutoLogin()

@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft;
@@ -28,20 +27,22 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         CraftyConfig.loadFile();
+        CraftyLauncher.AutoLogin();
+        CraftyEssentials.GetVersions();
+     
         RamSlider.Minimum = 2048;
         RamSlider.Maximum = PhysicalMemory;
         RamSlider.TickFrequency = 2048;
-        RamSlider.Value = CraftyConfig.loadRamFromJson();
-        Username.Text = CraftyConfig.loadUsernameFromJson();
-
-        CraftyLauncher.AutoLogin();
-        CraftyEssentials.GetVersions();
 
         VersionBox.ItemsSource = VersionList;
         VersionBox.SelectedItem = VersionList.First();
     }
 
-    private void OnExit(object sender, CancelEventArgs e) { Environment.Exit(0); }
+    private void OnExit(object sender, CancelEventArgs e)
+    {
+        CraftyConfig.writeFile();
+        Environment.Exit(0);
+    }
 
     private async void LoginLogoutEvent(object sender, RoutedEventArgs e)
     {
@@ -94,7 +95,7 @@ public partial class MainWindow : Window
             return;
         }
         
-        CraftyConfig.writeFile(Username.Text, RamSlider.Value);
+        CraftyConfig.writeFile();
 
         if (!CraftyLauncher.LoggedIn) { CraftyLauncher.Session = MSession.GetOfflineSession(Username.Text); }
 
@@ -177,42 +178,42 @@ public partial class MainWindow : Window
 
     private void SnapshotChecked(object sender, RoutedEventArgs e)
     {
-        CraftyLauncher.GetSnapshots = true;
+        CraftyConfig.data.getSnapshots = true;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void SnapshotUnchecked(object sender, RoutedEventArgs e)
     {
-        CraftyLauncher.GetSnapshots = false;
+        CraftyConfig.data.getSnapshots = false;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void BetaChecked(object sender, RoutedEventArgs e)
     {
-        CraftyLauncher.GetBetas = true;
+        CraftyConfig.data.getBetas = true;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void BetaUnchecked(object sender, RoutedEventArgs e)
     {
-        CraftyLauncher.GetBetas = false;
+        CraftyConfig.data.getBetas = false;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void AlphaChecked(object sender, RoutedEventArgs e)
     {
-        CraftyLauncher.GetAlphas = true;
+        CraftyConfig.data.getAlphas = true;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void AlphaUnchecked(object sender, RoutedEventArgs e)
     {
-        CraftyLauncher.GetAlphas = false;
+        CraftyConfig.data.getAlphas = false;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }

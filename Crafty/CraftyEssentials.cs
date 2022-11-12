@@ -61,19 +61,19 @@ public static class CraftyEssentials
                 Debug.WriteLine($"Added {type} {id}");
             }
 
-            else if (type == "snapshot" && CraftyLauncher.GetSnapshots)
+            else if (type == "snapshot" && CraftyConfig.data.getSnapshots)
             {
                 CraftyLauncher.VersionList.Add(new CraftyVersion(id, id, type, true));
                 Debug.WriteLine($"Added {type} {id}");
             }
 
-            else if (type == "old_beta" && CraftyLauncher.GetBetas)
+            else if (type == "old_beta" && CraftyConfig.data.getBetas)
             {
                 CraftyLauncher.VersionList.Add(new CraftyVersion(id, id, type, true));
                 Debug.WriteLine($"Added {type} {id}");
             }
 
-            else if (type == "old_alpha" && CraftyLauncher.GetAlphas)
+            else if (type == "old_alpha" && CraftyConfig.data.getAlphas)
             {
                 CraftyLauncher.VersionList.Add(new CraftyVersion(id, id, type, true));
                 Debug.WriteLine($"Added {type} {id}");
