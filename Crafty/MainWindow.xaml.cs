@@ -10,6 +10,7 @@ using CmlLib.Core;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft;
 using CmlLib.Core.Auth.Microsoft.UI.Wpf;
+using MaterialDesignThemes.Wpf;
 
 namespace Crafty;
  
@@ -69,10 +70,7 @@ public partial class MainWindow : Window
                 LoginLogout.Content = "Logout";
             }
 
-            catch (LoginCancelledException)
-            {
-                return;
-            }
+            catch (LoginCancelledException) { return; }
         }
 
         else
@@ -89,30 +87,31 @@ public partial class MainWindow : Window
 
     private async void PlayEvent(object sender, RoutedEventArgs e)
     {
+        CraftyVersion Version = (CraftyVersion)VersionBox.SelectedItem;
+
+        if (!CraftyLauncher.VersionList.Contains(Version))
+        {
+            await ShowErrorDialog("Version is not selected!");
+            VersionBox.SelectedItem = CraftyLauncher.VersionList.First();
+            return;
+        }
+
         if (!CraftyEssentials.CheckUsername(Username.Text))
         {
-            MessageBox.Show($"Wrong username!");
+            await ShowErrorDialog("Wrong username!");
             return;
         }
         
-        CraftyConfig.writeFile();
-
         if (!CraftyLauncher.LoggedIn) { CraftyLauncher.Session = MSession.GetOfflineSession(Username.Text); }
+
+        CraftyConfig.writeFile();
 
         MLaunchOption LauncherOptions = new MLaunchOption
         {
             MaximumRamMb = (int)RamSlider.Value,
             Session = CraftyLauncher.Session,
+            JVMArguments = JVMArguments.Text.Split(" ")
         };
-
-        CraftyVersion Version = (CraftyVersion)VersionBox.SelectedItem;
-
-        if (!CraftyLauncher.VersionList.Contains(Version))
-        {
-            MessageBox.Show($"Version is not selected!");
-            VersionBox.SelectedItem = CraftyLauncher.VersionList.First();
-            return; 
-        }
 
         Username.IsEnabled = false;
         LoginLogout.IsEnabled = false;
@@ -149,12 +148,21 @@ public partial class MainWindow : Window
         }
 
         DownloadText.Text = $"Downloading missing files (this might take a while)";
-        var Minecraft = await CraftyLauncher.Launcher.CreateProcessAsync(Version.id, LauncherOptions, true);
-        Minecraft.Start();
-        UpdateVersionBox();
-        DownloadText.Text = $"Launched Minecraft {Version.id}";
+        try
+        {
+            var Minecraft = await CraftyLauncher.Launcher.CreateProcessAsync(Version.id, LauncherOptions, true);
+            Minecraft.Start();
+            UpdateVersionBox();
+            DownloadText.Text = $"Launched Minecraft {Version.id}";
 
-        await Task.Delay(3000);
+            await Task.Delay(3000);
+        }
+        catch
+        {
+            Debug.WriteLine($"Couldn't run {Version.id}!");
+            await ShowErrorDialog($"Couldn't run {Version.id}!");
+        }
+
         DownloadText.Text = "Crafty by heapy & Badder1337";
         if (!CraftyLauncher.LoggedIn)
         {
@@ -219,4 +227,10 @@ public partial class MainWindow : Window
     }
 
     public void ChangeDownloadText(string s) { Dispatcher.Invoke(new Action(() => DownloadText.Text = s)); }
+
+    public async Task ShowErrorDialog(string description)
+    {
+        var DialogContent = new DialogContent("Error", description);
+        await DialogHost.Show(DialogContent, "RootDialog");
+    }
 }

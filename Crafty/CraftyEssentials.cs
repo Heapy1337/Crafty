@@ -12,8 +12,21 @@ using System.Threading.Tasks;
 
 namespace Crafty;
 
+public class DialogContent
+{
+    public string Title { get; set; }
+    public string Description { get; set; }
+
+    public DialogContent(string title, string description)
+    {
+        Title = title;
+        Description = description;
+    }
+}
+
 public static class CraftyEssentials
 {
+    public static readonly string CraftyVersion = "v1.0";
     public static string AllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_1234567890";
     private static string VersionManifest = "https://piston-meta.mojang.com/mc/game/version_manifest.json";
     private static int MaxTasks = 128;

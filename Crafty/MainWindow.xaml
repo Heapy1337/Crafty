@@ -19,203 +19,241 @@
         <ImageBrush ImageSource="/Assets/background.png" Stretch="UniformToFill" />
     </Window.Background>
 
-    <Grid>
-        <Border
-            Margin="10"
-            Padding="10"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            CornerRadius="15">
-            <Border.Background>
-                <SolidColorBrush Opacity="0.5" Color="Black" />
-            </Border.Background>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <TextBlock
-                    Grid.Row="0"
-                    Margin="5"
-                    HorizontalAlignment="Center"
-                    FontSize="28"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Text="Crafty" />
-
-                <StackPanel
-                    Grid.Row="1"
-                    Margin="5"
-                    Orientation="Horizontal">
-                    <TextBox
-                        x:Name="Username"
-                        Width="260"
+    <materialDesign:DialogHost CloseOnClickAway="True" Identifier="RootDialog">
+        <materialDesign:DialogHost.DialogContentTemplate>
+            <DataTemplate DataType="local:DialogContent">
+                <StackPanel Width="300" Margin="15">
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        FontSize="28"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="{Binding Title}" />
+                    <TextBlock
+                        Margin="5,0,0,5"
                         FontSize="16"
-                        Foreground="White" />
+                        Text="{Binding Description}" />
+                    <Button
+                        Margin="0,5,5,5"
+                        HorizontalAlignment="Right"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        Content="Ok" />
+                </StackPanel>
+            </DataTemplate>
+        </materialDesign:DialogHost.DialogContentTemplate>
+
+        <Grid>
+            <Border
+                Margin="10"
+                Padding="10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                CornerRadius="15">
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.5" Color="Black" />
+                </Border.Background>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="5"
+                        HorizontalAlignment="Center"
+                        FontSize="28"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="Crafty" />
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="5"
+                        Orientation="Horizontal">
+                        <TextBox
+                            x:Name="Username"
+                            Width="260"
+                            FontSize="16"
+                            Foreground="White" />
+
+                        <Button
+                            x:Name="LoginLogout"
+                            Width="100"
+                            Height="30"
+                            Margin="5,0,0,0"
+                            Click="LoginLogoutEvent"
+                            Content="Login" />
+                    </StackPanel>
+
+                    <ComboBox
+                        x:Name="VersionBox"
+                        Grid.Row="3"
+                        Width="365"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Foreground="White"
+                        ItemsSource="{Binding}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="local:CraftyVersion">
+                                <TextBlock Text="{Binding name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
                     <Button
-                        x:Name="LoginLogout"
-                        Width="100"
+                        x:Name="Play"
+                        Grid.Row="4"
                         Height="30"
-                        Margin="5,0,0,0"
-                        Click="LoginLogoutEvent"
-                        Content="Login" />
-                </StackPanel>
+                        Margin="5"
+                        Click="PlayEvent"
+                        Content="Play" />
+                </Grid>
+            </Border>
 
-                <ComboBox
-                    x:Name="VersionBox"
-                    Grid.Row="3"
-                    Width="365"
-                    Margin="5"
-                    VerticalAlignment="Center"
-                    FontSize="16"
-                    Foreground="White"
-                    ItemsSource="{Binding}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="local:CraftyVersion">
-                            <TextBlock Text="{Binding name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-
-                <Button
-                    x:Name="Play"
-                    Grid.Row="4"
-                    Height="30"
-                    Margin="5"
-                    Click="PlayEvent"
-                    Content="Play" />
-            </Grid>
-        </Border>
-
-        <Border
-            Margin="10"
-            Padding="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            CornerRadius="10">
-            <Border.Background>
-                <SolidColorBrush Opacity="0.5" Color="Black" />
-            </Border.Background>
-            <TextBlock
-                x:Name="DownloadText"
+            <Border
+                Margin="10"
+                Padding="10"
                 HorizontalAlignment="Center"
-                FontSize="12"
-                Foreground="White"
-                Text="Crafty by heapy &amp; Badder1337" />
-        </Border>
+                VerticalAlignment="Top"
+                CornerRadius="10">
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.5" Color="Black" />
+                </Border.Background>
+                <TextBlock
+                    x:Name="DownloadText"
+                    HorizontalAlignment="Center"
+                    FontSize="12"
+                    Foreground="White"
+                    Text="Crafty by heapy &amp; Badder1337" />
+            </Border>
 
-        <ToggleButton
-            x:Name="Settings"
-            Width="38"
-            Height="38"
-            Margin="10"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            IsChecked="False"
-            Style="{DynamicResource MaterialDesignActionToggleButton}">
-            <Viewbox Width="30" Height="30">
-                <Canvas Width="24" Height="24">
-                    <Path Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" Fill="Black" />
-                </Canvas>
-            </Viewbox>
-        </ToggleButton>
+            <ToggleButton
+                x:Name="Settings"
+                Width="38"
+                Height="38"
+                Margin="10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                IsChecked="False"
+                Style="{DynamicResource MaterialDesignActionToggleButton}">
+                <Viewbox Width="30" Height="30">
+                    <Canvas Width="24" Height="24">
+                        <Path Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" Fill="Black" />
+                    </Canvas>
+                </Viewbox>
+            </ToggleButton>
 
-        <materialDesign:DrawerHost IsRightDrawerOpen="{Binding ElementName=Settings, Path=IsChecked}">
-            <materialDesign:DrawerHost.RightDrawerContent>
-                <ScrollViewer>
-                    <StackPanel Width="500">
-                        <TextBlock
-                            Margin="10"
-                            FontSize="16"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Text="Memory allocation" />
-
-                        <DockPanel Margin="10">
-                            <TextBlock
-                                Margin="10"
-                                DockPanel.Dock="Right"
-                                Foreground="White"
-                                Text="MB" />
-                            <TextBox
-                                x:Name="RamText"
-                                Width="100"
-                                Margin="5"
-                                DockPanel.Dock="Right"
-                                Foreground="White"
-                                IsEnabled="False"
-                                TextAlignment="Right" />
-                            <Slider
-                                x:Name="RamSlider"
-                                Margin="5"
-                                Focusable="False"
-                                IsSnapToTickEnabled="True"
-                                LargeChange="0"
-                                TickPlacement="BottomRight"
-                                ValueChanged="RamSliderEvent" />
-                        </DockPanel>
-
-                        <Grid>
+            <materialDesign:DrawerHost IsRightDrawerOpen="{Binding ElementName=Settings, Path=IsChecked}">
+                <materialDesign:DrawerHost.RightDrawerContent>
+                    <ScrollViewer>
+                        <StackPanel Width="500">
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
                                 FontWeight="Bold"
                                 Foreground="White"
-                                Text="Show Snapshot versions" />
+                                Text="Memory allocation" />
 
-                            <ToggleButton
-                                x:Name="ToggleButton_GetSnapshots"
-                                Margin="10"
-                                HorizontalAlignment="Right"
-                                Checked="SnapshotChecked"
-                                IsChecked="False"
-                                Style="{DynamicResource MaterialDesignSwitchToggleButton}"
-                                Unchecked="SnapshotUnchecked" />
-                        </Grid>
+                            <DockPanel Margin="10">
+                                <TextBlock
+                                    Margin="10"
+                                    DockPanel.Dock="Right"
+                                    Foreground="White"
+                                    Text="MB" />
+                                <TextBox
+                                    x:Name="RamText"
+                                    Width="100"
+                                    Margin="5"
+                                    DockPanel.Dock="Right"
+                                    Foreground="White"
+                                    IsEnabled="False"
+                                    TextAlignment="Right" />
+                                <Slider
+                                    x:Name="RamSlider"
+                                    Margin="5"
+                                    Focusable="False"
+                                    IsSnapToTickEnabled="True"
+                                    LargeChange="0"
+                                    TickPlacement="BottomRight"
+                                    ValueChanged="RamSliderEvent" />
+                            </DockPanel>
 
-                        <Grid>
+                            <Grid>
+                                <TextBlock
+                                    Margin="10"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="White"
+                                    Text="Show Snapshot versions" />
+
+                                <ToggleButton
+                                    x:Name="ToggleButton_GetSnapshots"
+                                    Margin="10"
+                                    HorizontalAlignment="Right"
+                                    Checked="SnapshotChecked"
+                                    IsChecked="False"
+                                    Style="{DynamicResource MaterialDesignSwitchToggleButton}"
+                                    Unchecked="SnapshotUnchecked" />
+                            </Grid>
+
+                            <Grid>
+                                <TextBlock
+                                    Margin="10"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="White"
+                                    Text="Show Beta versions" />
+
+                                <ToggleButton
+                                    Name="ToggleButton_GetBetas"
+                                    Margin="10"
+                                    HorizontalAlignment="Right"
+                                    Checked="BetaChecked"
+                                    IsChecked="False"
+                                    Style="{DynamicResource MaterialDesignSwitchToggleButton}"
+                                    Unchecked="BetaUnchecked" />
+                            </Grid>
+
+                            <Grid>
+                                <TextBlock
+                                    Margin="10"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="White"
+                                    Text="Show Alpha versions" />
+
+                                <ToggleButton
+                                    Name="ToggleButton_GetAlphas"
+                                    Margin="10"
+                                    HorizontalAlignment="Right"
+                                    Checked="AlphaChecked"
+                                    IsChecked="False"
+                                    Style="{DynamicResource MaterialDesignSwitchToggleButton}"
+                                    Unchecked="AlphaUnchecked" />
+                            </Grid>
+
                             <TextBlock
                                 Margin="10"
                                 FontSize="16"
                                 FontWeight="Bold"
                                 Foreground="White"
-                                Text="Show Beta versions" />
+                                Text="JVM Arguments" />
 
-                            <ToggleButton
-                                Name="ToggleButton_GetBetas"
-                                Margin="10"
-                                HorizontalAlignment="Right"
-                                Checked="BetaChecked"
-                                IsChecked="False"
-                                Style="{DynamicResource MaterialDesignSwitchToggleButton}"
-                                Unchecked="BetaUnchecked" />
-                        </Grid>
-
-                        <Grid>
-                            <TextBlock
-                                Margin="10"
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Foreground="White"
-                                Text="Show Alpha versions" />
-
-                            <ToggleButton
-                                Name="ToggleButton_GetAlphas"
-                                Margin="10"
-                                HorizontalAlignment="Right"
-                                Checked="AlphaChecked"
-                                IsChecked="False"
-                                Style="{DynamicResource MaterialDesignSwitchToggleButton}"
-                                Unchecked="AlphaUnchecked" />
-                        </Grid>
-                    </StackPanel>
-                </ScrollViewer>
-            </materialDesign:DrawerHost.RightDrawerContent>
-        </materialDesign:DrawerHost>
-    </Grid>
+                            <Grid Margin="10">
+                                <TextBox
+                                    x:Name="JVMArguments"
+                                    Foreground="White"
+                                    TextAlignment="Left" />
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </materialDesign:DrawerHost.RightDrawerContent>
+            </materialDesign:DrawerHost>
+        </Grid>
+    </materialDesign:DialogHost>
 </Window>
