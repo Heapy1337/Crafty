@@ -10,30 +10,29 @@ namespace Crafty;
 
 public class CraftyVersion
 {
-    public string name { get; set; }
-    public string id { get; set; }
-    public string type { get; set; }
-    public bool isOriginal { get; set; }
+    public string? Name { get; set; }
+    public string? Id { get; set; }
+    public string? Type { get; set; }
+    public bool IsOriginal { get; set; }
 
-    public CraftyVersion(string Name, string Id, string Type, bool IsOriginal = false)
+    public CraftyVersion(string? name, string? id, string? type, bool isOriginal = false)
     {
-        name = Name;
-        id = Id;
-        type = Type;
-        isOriginal = IsOriginal;
+        Name = name;
+        Id = id; 
+        Type = type;
+        IsOriginal = isOriginal;
     }
 }
 
 public class CraftyLauncher
 {
-    public static string CraftyPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/.crafty";
-    public static string JavaPath = $"{CraftyPath}/java";
-    public static CMLauncher Launcher = new(new MinecraftPath(CraftyPath));
-    public static List<CraftyVersion> VersionList = new();
-    public static List<CraftyVersion> FabricVersionList = new();
+    public static readonly string CraftyPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/.crafty";
+    public static readonly string JavaPath = $"{CraftyPath}/java";
+    public static readonly CMLauncher Launcher = new(new MinecraftPath(CraftyPath));
+    public static readonly List<CraftyVersion> VersionList = new();
     public static bool LoggedIn = false;
     public static MSession Session;
-    public static LoginHandler CraftyLogin = new(x => x.CacheManager = new(new JsonFileCacheManager<SessionCache>($"{CraftyPath}/crafty_session.json")));
+    public static readonly LoginHandler CraftyLogin = new(x => x.CacheManager = new(new JsonFileCacheManager<SessionCache>($"{CraftyPath}/session.json")));
 
     public static void AutoLogin()
     {

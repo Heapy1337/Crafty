@@ -15,21 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="{000204ef-0000-0000-c000-000000000046}">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>6</VersionMajor>
-      <Guid>000204ef-0000-0000-c000-000000000046</Guid>
-    </COMReference>
-    <COMReference Include="{ea544a21-c82d-11d1-a3e4-00a0c90aea82}">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>6</VersionMajor>
-      <Guid>ea544a21-c82d-11d1-a3e4-00a0c90aea82</Guid>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Assets\icon.ico" />
     
   </ItemGroup>

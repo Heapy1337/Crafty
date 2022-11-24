@@ -18,30 +18,26 @@ public partial class MainWindow : Window
 {
     public static MainWindow Current;
 
-    private List<CraftyVersion> VersionList { get { return CraftyLauncher.VersionList; } }
-    private List<CraftyVersion> FabricVersionList { get { return CraftyLauncher.FabricVersionList; } }
-    private int PhysicalMemory = CraftyEssentials.GetPhysicalMemory();
-    
     public MainWindow()
     {
         Current = this;
         InitializeComponent();
 
-        CraftyConfig.loadFile();
+        CraftyConfig.LoadFile();
         CraftyLauncher.AutoLogin();
         CraftyEssentials.GetVersions();
      
         RamSlider.Minimum = 2048;
-        RamSlider.Maximum = PhysicalMemory;
+        RamSlider.Maximum = CraftyEssentials.GetPhysicalMemory();
         RamSlider.TickFrequency = 2048;
 
-        VersionBox.ItemsSource = VersionList;
-        VersionBox.SelectedItem = VersionList.First();
+        VersionBox.ItemsSource = CraftyLauncher.VersionList;
+        VersionBox.SelectedItem = CraftyLauncher.VersionList.First();
     }
 
     private void OnExit(object sender, CancelEventArgs e)
     {
-        CraftyConfig.writeFile();
+        CraftyConfig.WriteFile();
         Environment.Exit(0);
     }
 
@@ -76,7 +72,7 @@ public partial class MainWindow : Window
         else
         {
             try { CraftyLauncher.CraftyLogin.ClearCache(); } catch { Debug.WriteLine("Couldn't clear cache!"); }
-            try { File.Delete($"{CraftyLauncher.CraftyPath}/crafty_session.json"); } catch { Debug.WriteLine("Couldn't delete cache file!"); }
+            try { File.Delete($"{CraftyLauncher.CraftyPath}/session.json"); } catch { Debug.WriteLine("Couldn't delete cache file!"); }
             try { File.Delete($"{Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)}/Crafty.exe.WebView2/EBWebView/Local State"); } catch { Debug.WriteLine("Couldn't delete token file!"); }
 
             CraftyLauncher.LoggedIn = false;
@@ -104,13 +100,13 @@ public partial class MainWindow : Window
         
         if (!CraftyLauncher.LoggedIn) { CraftyLauncher.Session = MSession.GetOfflineSession(Username.Text); }
 
-        CraftyConfig.writeFile();
+        CraftyConfig.WriteFile();
 
         MLaunchOption LauncherOptions = new MLaunchOption
         {
             MaximumRamMb = (int)RamSlider.Value,
             Session = CraftyLauncher.Session,
-            JVMArguments = JVMArguments.Text.Split(" ")
+            JVMArguments = JvmArguments.Text.Split(" ")
         };
 
         Username.IsEnabled = false;
@@ -119,7 +115,7 @@ public partial class MainWindow : Window
         Play.IsEnabled = false;
         Settings.IsEnabled = false;
 
-        if (Version.isOriginal)
+        if (Version.IsOriginal)
         {
             try
             {
@@ -127,40 +123,40 @@ public partial class MainWindow : Window
                 // await CraftyEssentials.DownloadJava();
                 // Old versions crash on Java 19 - using Minecraft's default Java runtimes for now
 
-                DownloadText.Text = $"Downloading {Version.id}.jar";
-                await CraftyEssentials.DownloadVersion(Version.id);
+                DownloadText.Text = $"Downloading {Version.Id}.jar";
+                await CraftyEssentials.DownloadVersion(Version.Id);
 
-                DownloadText.Text = $"Downloading {Version.id}.json";
-                await CraftyEssentials.DownloadJson(Version.id);
+                DownloadText.Text = $"Downloading {Version.Id}.json";
+                await CraftyEssentials.DownloadJson(Version.Id);
 
                 DownloadText.Text = "Fetching assets";
-                await CraftyEssentials.DownloadAssets(Version.id);
+                await CraftyEssentials.DownloadAssets(Version.Id);
 
                 DownloadText.Text = "Fetching libraries";
-                await CraftyEssentials.DownloadLibraries(Version.id);
+                await CraftyEssentials.DownloadLibraries(Version.Id);
             }
 
             catch
             {
                 DownloadText.Text = "Failed to download files while using efficient method - using normal method";
-                await CraftyLauncher.Launcher.CheckAndDownloadAsync(await CraftyLauncher.Launcher.GetVersionAsync(Version.id));
+                await CraftyLauncher.Launcher.CheckAndDownloadAsync(await CraftyLauncher.Launcher.GetVersionAsync(Version.Id));
             }
         }
 
         DownloadText.Text = $"Downloading missing files (this might take a while)";
         try
         {
-            var Minecraft = await CraftyLauncher.Launcher.CreateProcessAsync(Version.id, LauncherOptions, true);
+            var Minecraft = await CraftyLauncher.Launcher.CreateProcessAsync(Version.Id, LauncherOptions, true);
             Minecraft.Start();
             UpdateVersionBox();
-            DownloadText.Text = $"Launched Minecraft {Version.id}";
+            DownloadText.Text = $"Launched Minecraft {Version.Id}";
 
             await Task.Delay(3000);
         }
         catch
         {
-            Debug.WriteLine($"Couldn't run {Version.id}!");
-            await ShowErrorDialog($"Couldn't run {Version.id}!");
+            Debug.WriteLine($"Couldn't run {Version.Id}!");
+            await ShowErrorDialog($"Couldn't run {Version.Id}!");
         }
 
         DownloadText.Text = "Crafty by heapy & Badder1337";
@@ -174,6 +170,12 @@ public partial class MainWindow : Window
         Settings.IsEnabled = true;
     }
 
+    private async Task ShowErrorDialog(string description)
+    {
+        var DialogContent = new DialogContent("Error", description);
+        await DialogHost.Show(DialogContent, "RootDialog");
+    }
+
     private void UpdateVersionBox()
     {
         int SelectedIndex = VersionBox.SelectedIndex;
@@ -182,55 +184,49 @@ public partial class MainWindow : Window
         VersionBox.Items.Refresh();
     }
 
-    private void RamSliderEvent(object sender, RoutedPropertyChangedEventArgs<double> e) { RamText.Text = e.NewValue.ToString(); }
-
     private void SnapshotChecked(object sender, RoutedEventArgs e)
     {
-        CraftyConfig.data.getSnapshots = true;
+        CraftyConfig.Data.GetSnapshots = true;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void SnapshotUnchecked(object sender, RoutedEventArgs e)
     {
-        CraftyConfig.data.getSnapshots = false;
+        CraftyConfig.Data.GetSnapshots = false;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void BetaChecked(object sender, RoutedEventArgs e)
     {
-        CraftyConfig.data.getBetas = true;
+        CraftyConfig.Data.GetBetas = true;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void BetaUnchecked(object sender, RoutedEventArgs e)
     {
-        CraftyConfig.data.getBetas = false;
+        CraftyConfig.Data.GetBetas = false;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void AlphaChecked(object sender, RoutedEventArgs e)
     {
-        CraftyConfig.data.getAlphas = true;
+        CraftyConfig.Data.GetAlphas = true;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
     private void AlphaUnchecked(object sender, RoutedEventArgs e)
     {
-        CraftyConfig.data.getAlphas = false;
+        CraftyConfig.Data.GetAlphas = false;
         CraftyEssentials.GetVersions();
         UpdateVersionBox();
     }
 
-    public void ChangeDownloadText(string s) { Dispatcher.Invoke(new Action(() => DownloadText.Text = s)); }
+    private void RamSliderEvent(object sender, RoutedPropertyChangedEventArgs<double> e) { RamText.Text = e.NewValue.ToString(); }
 
-    public async Task ShowErrorDialog(string description)
-    {
-        var DialogContent = new DialogContent("Error", description);
-        await DialogHost.Show(DialogContent, "RootDialog");
-    }
+    public void ChangeDownloadText(string s) { Dispatcher.Invoke(new Action(() => DownloadText.Text = s)); }
 }

@@ -1,44 +1,45 @@
 using Newtonsoft.Json;
-using System.ComponentModel;
 using System.IO;
-using System.Windows;
 
 namespace Crafty;
 
 public static class CraftyConfig
 {
-    public static void writeFile()
+    public static void WriteFile()
     {
-        data.username = MainWindow.Current.Username.Text;
-        data.ram = (int)MainWindow.Current.RamSlider.Value;
-        var json = JsonConvert.SerializeObject(data);
-        File.WriteAllTextAsync(CraftyLauncher.CraftyPath + "/config.json", json);
+        Data.Username = MainWindow.Current.Username.Text;
+        Data.Ram = (int)MainWindow.Current.RamSlider.Value;
+        Data.JvmArguments = MainWindow.Current.JvmArguments.Text;
+        var json = JsonConvert.SerializeObject(Data);
+        File.WriteAllTextAsync($"{CraftyLauncher.CraftyPath}/config.json", json);
     }
 
-    public static void loadFile()
+    public static void LoadFile()
     {
-        if (File.Exists(CraftyLauncher.CraftyPath + "/config.json"))
+        if (File.Exists($"{CraftyLauncher.CraftyPath}/config.json"))
         {
-            string jsonString = File.ReadAllText(CraftyLauncher.CraftyPath + "/config.json");
-            JsonConvert.PopulateObject(jsonString, data);
+            string jsonString = File.ReadAllText($"{CraftyLauncher.CraftyPath}/config.json");
+            JsonConvert.PopulateObject(jsonString, Data);
 
-            MainWindow.Current.Username.Text = data.username;
-            MainWindow.Current.RamSlider.Value = (double)data.ram;
+            MainWindow.Current.Username.Text = Data.Username;
+            MainWindow.Current.RamSlider.Value = (double)Data.Ram;
+            MainWindow.Current.JvmArguments.Text = Data.JvmArguments;
 
-            if (data.getSnapshots) MainWindow.Current.ToggleButton_GetSnapshots.IsChecked = true; else MainWindow.Current.ToggleButton_GetSnapshots.IsChecked = false;
-            if (data.getBetas) MainWindow.Current.ToggleButton_GetBetas.IsChecked = true; else MainWindow.Current.ToggleButton_GetBetas.IsChecked = false;
-            if (data.getAlphas) MainWindow.Current.ToggleButton_GetAlphas.IsChecked = true; else MainWindow.Current.ToggleButton_GetAlphas.IsChecked = false;
+            if (Data.GetSnapshots) MainWindow.Current.GetSnapshots.IsChecked = true; else MainWindow.Current.GetSnapshots.IsChecked = false;
+            if (Data.GetAlphas) MainWindow.Current.GetBetas.IsChecked = true; else MainWindow.Current.GetBetas.IsChecked = false;
+            if (Data.GetBetas) MainWindow.Current.GetAlphas.IsChecked = true; else MainWindow.Current.GetAlphas.IsChecked = false;
         }
     }
 
-    public class Data_t
+    public class CraftyData
     {
-        public string? username { get; set; }
-        public int? ram = 2048;
-        public bool getSnapshots { get; set; }
-        public bool getAlphas { get; set; }
-        public bool getBetas { get; set; }
+        public string? Username { get; set; }
+        public string? JvmArguments { get; set; }
+        public int? Ram = 2048;
+        public bool GetSnapshots { get; set; }
+        public bool GetAlphas { get; set; }
+        public bool GetBetas { get; set; }
     }
 
-    public static Data_t data = new Data_t { };
+    public static readonly CraftyData Data = new();
 }

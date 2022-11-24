@@ -96,11 +96,10 @@
                         Margin="5"
                         VerticalAlignment="Center"
                         FontSize="16"
-                        Foreground="White"
-                        ItemsSource="{Binding}">
+                        Foreground="White">
                         <ComboBox.ItemTemplate>
                             <DataTemplate DataType="local:CraftyVersion">
-                                <TextBlock Text="{Binding name}" />
+                                <TextBlock Text="{Binding Name}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
@@ -192,7 +191,7 @@
                                     Text="Show Snapshot versions" />
 
                                 <ToggleButton
-                                    x:Name="ToggleButton_GetSnapshots"
+                                    x:Name="GetSnapshots"
                                     Margin="10"
                                     HorizontalAlignment="Right"
                                     Checked="SnapshotChecked"
@@ -210,7 +209,7 @@
                                     Text="Show Beta versions" />
 
                                 <ToggleButton
-                                    Name="ToggleButton_GetBetas"
+                                    Name="GetBetas"
                                     Margin="10"
                                     HorizontalAlignment="Right"
                                     Checked="BetaChecked"
@@ -228,7 +227,7 @@
                                     Text="Show Alpha versions" />
 
                                 <ToggleButton
-                                    Name="ToggleButton_GetAlphas"
+                                    Name="GetAlphas"
                                     Margin="10"
                                     HorizontalAlignment="Right"
                                     Checked="AlphaChecked"
@@ -246,7 +245,7 @@
 
                             <Grid Margin="10">
                                 <TextBox
-                                    x:Name="JVMArguments"
+                                    x:Name="JvmArguments"
                                     Foreground="White"
                                     TextAlignment="Left" />
                             </Grid>
